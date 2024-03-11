@@ -1,0 +1,126 @@
+import random
+import time
+
+weapons_phrases = {
+    'AK-47': {'phrases': ['выстрелил в голову', 'выстрелил в спину'], 'damage_range': (5, 200)},
+    'AWP': {'phrases': ['ударил в глаз', 'попал в голову'], 'damage_range': (15, 300)},
+    'M4A4': {'phrases': ['прошивает в лоб', 'делает хедшот'], 'damage_range': (7, 205)},
+    'Desert Eagle': {'phrases': ['сжег душу', 'попал в сердце'], 'damage_range': (10, 200)},
+    'P90': {'phrases': ['истребил врага', 'сделал тактический выстрел'], 'damage_range': (3, 105)},
+    'SCAR-H': {'phrases': ['проделал дыру', 'потрескав броню'], 'damage_range': (9, 208)},
+    'UMP-45': {'phrases': ['дымовая завеса', 'выстрелил в ногу'], 'damage_range': (4, 108)},
+    'M249': {'phrases': ['сверхмощный огонь', 'свинцовая град'], 'damage_range': (12, 400)},
+    'Glock-18': {'phrases': ['с разворота', 'провел быстрый выстрел'], 'damage_range': (2, 105)},
+    'MP5': {'phrases': ['ударил в броню', 'доработал пулемет'], 'damage_range': (6, 202)},
+    'AUG': {'phrases': ['стрелял с прицелом', 'попал в грудь'], 'damage_range': (8, 208)},
+    'Galil AR': {'phrases': ['с разбросом', 'закрыл стрельбу'], 'damage_range': (20, 203)}
+}
+
+damage_phrases = {
+    'critical_hit': ['Критический урон!', 'Точное попадание!', 'Разрывная пуля!', 'Прямо в цель!', 'На волоске от смерти!', 'Жизни на волоске!', 'Удар в самую больную точку!', 'Смертельное попадание!', 'Разрушительное попадание!', 'Непробиваемое попадание!', 'Снайперское попадание!', 'Проникающий урон!', 'Безутешный выстрел!', 'Огнестрельное попадание!', 'Невероятное попадание!', 'Смерть в глаз!', 'Попадание в сердце!', 'Очко в точку!', 'Разбивка головы!', 'Критическое попадание!'],
+    'head_shot': ['Голову сдуло!', 'Отрыв головы!', 'Отработка головы!', 'Сейф-подход!', 'Хедшот!', 'Удар в мозг!', 'Мозги на асфальте!', 'Прокладка по голове!', 'Разбил капюшон!', 'Головешка!', 'Разогнул череп!', 'Снес голову!', 'Череп на полу!', 'Смерть в голову!', 'Ушная стрельба!', 'Сквозь голову!', 'Черепной стрельба!', 'Голову поет!', 'Пихтовая голова!', 'Засада по голове!']
+}
+
+damage_phrases_keys = list(damage_phrases.keys())
+
+phrases = [
+    "сделал одетуку",
+    "размолол врага через дым",
+    "поджег кусты",
+    "дал пушек",
+    "встретил горизонт",
+    "прошерстил угол",
+    "подсветил на цветочке",
+    "кинул молотов",
+    "полукожедробинировал",
+    "ушатал на мини",
+    "спейсмил",
+    "отстрелил по перекрёстку",
+    "разнёс монитор",
+    "зацепил через стену",
+    "взял углы",
+    "похерил башню",
+    "оторвал на дюпе",
+    "потушил молотов",
+    "сведбоксил",
+    "запил на миду",
+    "лся на ищю",
+    "прессанул авп",
+    " кинул",
+    "вспехал и налил в вент",
+    "выносил блочник",
+    "убил паразита",
+    "слёг на сейв",
+    "ул соло",
+    "заправил угоны",
+    "проколов зацепил"
+]
+
+players = {
+    's1mple': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'ZywOo': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'device': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'NiKo': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'coldzera': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'electronic': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'Magisk': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'ropz': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'KennyS': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'sander': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'GuardiaN': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'olofmeister': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'flusha': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'jw': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'KRIMZ': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'TACO': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'FalleN': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'Stewie2K': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'EliGE': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'NAF': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'XANTARES': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'Fer': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    's4': {'team': 2, 'hp': 100, 'killed': False, 'weapon': ''},
+    'Twistzz': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''},
+    'elige': {'team': 1, 'hp': 100, 'killed': False, 'weapon': ''}
+}
+
+def get_chat_phrase():
+    return random.choice(phrases)
+
+def get_damage_phrase():
+    return random.choice(damage_phrases[random.choice(damage_phrases_keys)])
+
+def simulate_game():
+    print("(ВНИМАНИЕ! игра содержит сомнительные фразы , 16+) Игра началась!")
+    while True:
+        for k, v in players.items():
+            v['weapon'] = random.choice(list(weapons_phrases.keys()))
+        
+        for _ in range(16):
+            attacker = random.choice([player for player in players if not players[player]['killed']])
+            victim_candidates = [player for player in players if players[player]['team'] != players[attacker]['team'] and not players[player]['killed']]
+            if victim_candidates:
+                victim = random.choice(victim_candidates)
+                weapon = players[attacker]['weapon']
+                action = random.choice(weapons_phrases[weapon]['phrases'])
+                damage = random.randint(weapons_phrases[weapon]['damage_range'][0], weapons_phrases[weapon]['damage_range'][1])
+                players[victim]['hp'] -= damage
+                if players[victim]['hp'] <= 0:
+                    print(f"Игрок {attacker} из команды {players[attacker]['team']} убил игрока {victim} из команды {players[victim]['team']} - {action} из {weapon} - {get_chat_phrase()}")
+                    players[victim]['killed'] = True
+                    players[victim]['hp'] = 0
+                else:
+                    print(f"Игрок {attacker} попал в игрока {victim} и нанес {damage} урона с помощью {weapon}. У игрока {victim} осталось {players[victim]['hp']} HP - {get_damage_phrase()}")
+            time.sleep(10)  # Задержка в 2 секунды
+
+            if all(players[player]['killed'] for player in players):
+                print("Ничья")
+                return
+            elif all(players[player]['killed'] for player in players if players[player]['team'] == 1):
+                print("Команда 2 победила")
+                return
+            elif all(players[player]['killed'] for player in players if players[player]['team'] == 2):
+                print("Команда 1 победила")
+                return
+
+simulate_game()
